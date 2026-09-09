@@ -1,0 +1,115 @@
+:root {
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Songti SC",
+    "Source Han Serif SC", "Noto Serif CJK SC", "SimSun", serif;
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system,
+    "Microsoft YaHei UI", "PingFang SC", sans-serif;
+
+  --paper: #f5f1e8;
+  --surface: #fbf9f4;
+  --surface-alt: #efe9dc;
+  --ink: #1a1713;
+  --ink-soft: #6b6257;
+  --ink-faint: #9c9384;
+  --rule: rgba(26, 23, 19, 0.14);
+  --rule-strong: rgba(26, 23, 19, 0.55);
+  --accent: #b4342a;
+  --accent-soft: rgba(180, 52, 42, 0.1);
+  --shadow: 0 14px 34px -22px rgba(26, 23, 19, 0.75);
+  --scrim: rgba(26, 23, 19, 0.42);
+  --grain: 0.05;
+
+  --veil-rgb: 12 9 6;
+  --card-alpha: 0.72;
+  --card-alpha-hover: 0.84;
+
+  --step-0: 13px;
+  --step-1: 15px;
+  --step-2: 17px;
+  --step-3: 22px;
+  --step-4: 30px;
+
+  --gap: 14px;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 180ms;
+  --dur-slow: 320ms;
+}
+
+/* 夜读：暖墨底 */
+[data-theme="night"] {
+  --paper: #15130f;
+  --surface: #1d1a15;
+  --surface-alt: #23201a;
+  --ink: #ede7da;
+  --ink-soft: #9a9083;
+  --ink-faint: #7a7063;
+  --rule: rgba(237, 231, 218, 0.16);
+  --rule-strong: rgba(237, 231, 218, 0.5);
+  --accent: #e0603f;
+  --accent-soft: rgba(224, 96, 63, 0.16);
+  --shadow: 0 16px 38px -22px rgba(0, 0, 0, 0.9);
+  --scrim: rgba(8, 7, 5, 0.6);
+  --grain: 0.035;
+  --veil-rgb: 8 7 5;
+  --card-alpha: 0.72;
+  --card-alpha-hover: 0.84;
+}
+
+/* 暮色：暖纸卡片浮在黄昏山脊上 */
+[data-theme="dusk"] {
+  --paper: #f3e7d6;
+  --surface: #fbf3e7;
+  --surface-alt: #f0e3d0;
+  --ink: #2a1d14;
+  --ink-soft: #6e5643;
+  --ink-faint: #a08564;
+  --rule: rgba(42, 29, 20, 0.14);
+  --rule-strong: rgba(42, 29, 20, 0.55);
+  --accent: #c0522a;
+  --accent-soft: rgba(192, 82, 42, 0.13);
+  --shadow: 0 16px 36px -22px rgba(52, 26, 8, 0.8);
+  --scrim: rgba(40, 22, 10, 0.5);
+  --grain: 0.055;
+  --veil-rgb: 74 40 16;
+  --card-alpha: 0.76;
+  --card-alpha-hover: 0.88;
+}
+
+/* 松墨：墨绿深林 */
+[data-theme="pine"] {
+  --paper: #17201c;
+  --surface: #1f2c26;
+  --surface-alt: #26332c;
+  --ink: #e3ede6;
+  --ink-soft: #9fb3a7;
+  --ink-faint: #75887d;
+  --rule: rgba(227, 237, 230, 0.16);
+  --rule-strong: rgba(227, 237, 230, 0.5);
+  --accent: #6fb394;
+  --accent-soft: rgba(111, 179, 148, 0.16);
+  --shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+  --scrim: rgba(8, 16, 12, 0.6);
+  --grain: 0.04;
+  --veil-rgb: 8 28 22;
+  --card-alpha: 0.62;
+  --card-alpha-hover: 0.76;
+}
+
+/* 夜航：靛蓝夜空与跑道灯 */
+[data-theme="flight"] {
+  --paper: #141a2b;
+  --surface: #1c2437;
+  --surface-alt: #232c42;
+  --ink: #e6eaf6;
+  --ink-soft: #a2aec9;
+  --ink-faint: #7a86a3;
+  --rule: rgba(230, 234, 246, 0.15);
+  --rule-strong: rgba(230, 234, 246, 0.48);
+  --accent: #e5b25c;
+  --accent-soft: rgba(229, 178, 92, 0.16);
+  --shadow: 0 18px 40px -24px rgba(0, 0, 0, 0.92);
+  --scrim: rgba(6, 9, 20, 0.62);
+  --grain: 0.04;
+  --veil-rgb: 10 14 34;
+  --card-alpha: 0.6;
+  --card-alpha-hover: 0.74;
+}

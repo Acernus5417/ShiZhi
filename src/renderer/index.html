@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="paper">
+  <head>
+    <meta charset="utf-8" />
+    <title>拾址 · SHIZHI</title>
+    <link rel="stylesheet" href="styles/tokens.css" />
+    <link rel="stylesheet" href="styles/app.css" />
+  </head>
+  <body>
+    <div class="backdrop" id="backdrop" hidden>
+      <div class="backdrop__img" id="backdropImg"></div>
+      <div class="backdrop__veil"></div>
+    </div>
+
+    <header class="masthead">
+      <div class="brand">
+        <span class="brand__cn">拾址</span>
+        <span class="brand__en">SHIZHI</span>
+      </div>
+
+      <div class="search search--inline" id="searchBox">
+        <svg class="search__mark" viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="7" cy="7" r="4.6" />
+          <path d="M10.4 10.4L14 14" />
+        </svg>
+        <input id="search" type="text" autocomplete="off" spellcheck="false" placeholder="名称 / 网址 / 用途 / 标签" />
+        <button type="button" class="search__clear icon-x" id="searchClear" aria-label="清空">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        </button>
+      </div>
+
+      <p class="masthead__stat" id="stat">载入中</p>
+
+      <div class="masthead__tools">
+        <button class="tool" id="btnSearch" title="检索 · Ctrl K" aria-label="检索">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="7" cy="7" r="4.6" />
+            <path d="M10.4 10.4L14 14" />
+          </svg>
+        </button>
+
+        <button class="tool" id="btnAdd" title="新增网址 · Ctrl N" aria-label="新增网址">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <circle cx="8" cy="8" r="6.2" />
+            <path d="M8 5.3v5.4M5.3 8h5.4" />
+          </svg>
+        </button>
+
+        <span class="tool-wrap">
+          <button class="tool" id="btnFilter" title="分类与排序" aria-label="分类与排序">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M2.6 5h10.8M2.6 11h10.8" />
+              <circle cx="6.2" cy="5" r="1.9" />
+              <circle cx="10.4" cy="11" r="1.9" />
+            </svg>
+          </button>
+          <div class="pop" id="filterPop" hidden>
+            <div class="pop__group">
+              <h4>分类</h4>
+              <div class="pop__items" id="popCats"></div>
+            </div>
+            <div class="pop__group">
+              <h4>排序</h4>
+              <div class="pop__items" id="popSorts"></div>
+            </div>
+          </div>
+        </span>
+
+        <button class="tool" id="btnTheme" title="夜读" aria-label="切换主题">
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M13.2 9.7A5.7 5.7 0 0 1 6.3 2.8a5.9 5.9 0 1 0 6.9 6.9z" />
+          </svg>
+        </button>
+
+        <span class="tool-wrap">
+          <button class="tool" id="btnMenu" title="更多" aria-label="更多">
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <circle cx="8" cy="3.8" r="1.05" />
+              <circle cx="8" cy="8" r="1.05" />
+              <circle cx="8" cy="12.2" r="1.05" />
+            </svg>
+          </button>
+          <div class="pop pop--menu" id="menuPop" hidden>
+            <button type="button" data-menu="settings">设置</button>
+            <button type="button" data-menu="import">导入浏览器书签</button>
+            <button type="button" data-menu="export">导出 JSON 备份</button>
+            <button type="button" data-menu="dir">打开数据目录</button>
+          </div>
+        </span>
+      </div>
+
+      <div class="win">
+        <button class="win__btn" id="winMin" aria-label="最小化">
+          <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 5h8" /></svg>
+        </button>
+        <button class="win__btn" id="winMax" aria-label="最大化">
+          <svg viewBox="0 0 10 10" aria-hidden="true"><rect x="1.5" y="1.5" width="7" height="7" /></svg>
+        </button>
+        <button class="win__btn win__btn--close" id="winClose" aria-label="关闭">
+          <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty" hidden></div>
+    </main>
+
+    <div class="sheet" id="sheet" hidden>
+      <div class="sheet__scrim" data-close></div>
+      <form class="sheet__panel" id="form" novalidate>
+        <header class="sheet__head">
+          <h2 id="sheetTitle">新增收录</h2>
+          <button type="button" class="icon-btn icon-x" id="sheetClose" aria-label="关闭">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+          </button>
+        </header>
+
+        <div class="field">
+          <label for="fUrl">网址</label>
+          <div class="field__row">
+            <img class="field__icon" id="fIcon" alt="" hidden />
+            <input id="fUrl" type="text" autocomplete="off" spellcheck="false" placeholder="example.com/docs" />
+          </div>
+          <p class="field__hint" id="urlHint">粘贴网址后自动抓取名称与图标</p>
+        </div>
+
+        <div class="field">
+          <label for="fTitle">名称</label>
+          <input id="fTitle" type="text" autocomplete="off" placeholder="留空则用域名" />
+        </div>
+
+        <div class="field">
+          <label for="fPurpose">用途</label>
+          <textarea id="fPurpose" rows="1" maxlength="20" placeholder="一句话说清什么时候会用到它（20 字内）"></textarea>
+        </div>
+
+        <div class="field">
+          <label>分类 <span class="field__flag" id="catFlag" hidden>自动建议</span></label>
+          <div class="chips" id="fCats"></div>
+          <input id="fCatNew" class="chip-input" type="text" placeholder="+ 新分类" autocomplete="off" />
+        </div>
+
+        <div class="field">
+          <label for="fTags">标签</label>
+          <input id="fTags" type="text" autocomplete="off" placeholder="逗号分隔，最多 4 个" />
+        </div>
+
+        <footer class="sheet__foot">
+          <p class="sheet__error" id="sheetError"></p>
+          <div class="sheet__actions">
+            <button type="button" class="btn btn--ghost" data-close>取消</button>
+            <button type="submit" class="btn btn--ink" id="sheetSave">收录</button>
+          </div>
+        </footer>
+      </form>
+    </div>
+
+    <div class="sheet" id="setSheet" hidden>
+      <div class="sheet__scrim" data-close></div>
+      <div class="sheet__panel sheet__panel--set">
+        <header class="sheet__head">
+          <h2>设置</h2>
+          <button type="button" class="icon-btn icon-x" id="setClose" aria-label="关闭">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+          </button>
+        </header>
+
+        <nav class="set-nav" id="setNav">
+          <button type="button" class="set-nav__row" data-page="custom">
+            <span class="set-nav__title">自定义</span>
+            <span class="set-nav__note">主题 · 背景 · 浏览器联动</span>
+            <span class="set-nav__go">›</span>
+          </button>
+          <button type="button" class="set-nav__row" data-page="dict">
+            <span class="set-nav__title">习惯词典</span>
+            <span class="set-nav__note" id="navNoteDict">0 条</span>
+            <span class="set-nav__go">›</span>
+          </button>
+          <button type="button" class="set-nav__row" data-page="cats">
+            <span class="set-nav__title">分类管理</span>
+            <span class="set-nav__note" id="navNoteCats">0 个</span>
+            <span class="set-nav__go">›</span>
+          </button>
+          <button type="button" class="set-nav__row" data-page="ai">
+            <span class="set-nav__title">AI 配置</span>
+            <span class="set-nav__note" id="navNoteAi">未配置</span>
+            <span class="set-nav__go">›</span>
+          </button>
+        </nav>
+
+        <div class="set-page" id="setPage" hidden>
+          <button type="button" class="set-page__back" id="setBack">‹ 设置</button>
+          <h3 class="set-page__title" id="setPageTitle"></h3>
+          <div class="set-page__body" id="setPageBody"></div>
+        </div>
+
+        <div class="set-sections" id="setSections" hidden>
+        <section class="set-group" data-page="custom" data-title="自定义">
+
+          <div class="set-block">
+            <div class="set-block__head">
+              <h4>主题</h4>
+              <span id="themeState">纸</span>
+            </div>
+            <div class="theme-row" id="themeRow"></div>
+          </div>
+
+          <div class="set-block">
+            <div class="set-block__head">
+              <h4>背景</h4>
+              <span id="bgState">未设置</span>
+              <button type="button" class="icon-act" id="bgOpen" title="背景设置" aria-label="背景设置">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <rect x="2.2" y="3" width="11.6" height="10" rx="1.6" />
+                  <path d="M2.6 11.2l3-3 2.6 2.6 2-2 3.2 3" />
+                  <circle cx="10.4" cy="6" r="1.1" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="set-block">
+            <div class="set-block__head">
+              <h4>浏览器联动</h4>
+              <span id="bridgeState">读取中</span>
+            </div>
+
+            <label class="set-check">
+              <input type="checkbox" id="bridgeOn" checked />
+              <span>允许浏览器扩展提交网址（端口 17820）</span>
+            </label>
+            <label class="set-check">
+              <input type="checkbox" id="loginOn" />
+              <span>开机自动启动，随时可收录</span>
+            </label>
+
+            <div class="set-actions">
+              <button type="button" class="btn btn--ghost" id="bridgeDir">打开扩展目录</button>
+            </div>
+          </div>
+
+        </section>
+
+        <section class="set-group" data-page="bg" data-title="背景">
+          <div class="set-block">
+            <div class="set-row">
+              <div class="bg-preview" id="bgPreview"><span>无</span></div>
+              <div class="set-actions">
+                <button type="button" class="btn btn--ghost" id="bgPick">选择图片…</button>
+                <button type="button" class="icon-act" id="bgClear" title="移除背景" aria-label="移除背景">
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 4.6h10M6.5 4.6V3h3v1.6M4.6 4.6l.7 8.4h5.4l.7-8.4" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="set-slider">
+              <span>虚化</span>
+              <input type="range" id="bgBlur" min="0" max="30" step="1" value="14" />
+              <em id="bgBlurVal">14</em>
+            </div>
+            <div class="set-slider">
+              <span>暗化</span>
+              <input type="range" id="bgDim" min="0" max="70" step="1" value="38" />
+              <em id="bgDimVal">38</em>
+            </div>
+          </div>
+        </section>
+
+        <section class="set-group" data-page="dict" data-title="习惯词典">
+
+          <div class="set-block">
+            <div class="set-block__head">
+              <h4>已记住的域名</h4>
+              <button type="button" class="icon-act" id="dictClear" title="清空" aria-label="清空">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3 4.6h10M6.5 4.6V3h3v1.6M4.6 4.6l.7 8.4h5.4l.7-8.4" />
+                </svg>
+              </button>
+            </div>
+            <div class="dict" id="dictList"></div>
+          </div>
+        </section>
+
+        <section class="set-group" data-page="cats" data-title="分类管理">
+          <div class="set-block">
+            <div class="set-block__head">
+              <h4>全部分类</h4>
+              <button type="button" class="icon-act" id="catAddOpen" title="添加分类" aria-label="添加分类">
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6.2" />
+                  <path d="M8 5.3v5.4M5.3 8h5.4" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="dict" id="catsList"></div>
+          </div>
+        </section>
+
+        <section class="set-group" data-page="catNew" data-title="添加分类">
+          <div class="set-block">
+            <div class="field">
+              <label for="catNew2">分类名称</label>
+              <input id="catNew2" type="text" maxlength="10" placeholder="最多 10 个字" autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="set-actions">
+              <button type="button" class="btn btn--ghost" id="catAddCancel">取消</button>
+              <button type="button" class="btn btn--ink" id="catAddSave">添加</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="set-group" data-page="ai" data-title="AI 配置">
+
+          <div class="set-block">
+            <label class="set-check">
+              <input type="checkbox" id="aiOn" />
+              <span>录入时补部分类与用途</span>
+            </label>
+
+            <div class="field">
+              <label for="aiBase">接口地址</label>
+              <input id="aiBase" type="text" placeholder="https://api.example.com/v1" autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="aiKey">API Key</label>
+              <input id="aiKey" type="password" placeholder="sk-…" autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="aiModel">模型</label>
+              <input id="aiModel" type="text" placeholder="gpt-4o-mini" autocomplete="off" spellcheck="false" />
+            </div>
+
+            <div class="set-actions">
+              <button type="button" class="btn btn--ghost" id="aiTest">测试连接</button>
+            </div>
+          </div>
+        </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="sheet" id="cropper" hidden>
+      <div class="sheet__scrim" data-close></div>
+      <div class="sheet__panel sheet__panel--crop">
+        <header class="sheet__head">
+          <h2>裁剪背景</h2>
+          <button type="button" class="icon-btn icon-x" id="cropCancel" aria-label="关闭">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+          </button>
+        </header>
+
+        <div class="cropper__stage" id="cropStage">
+          <img id="cropImg" alt="" draggable="false" />
+        </div>
+
+        <div class="set-slider">
+          <span>缩放</span>
+          <input type="range" id="cropZoom" min="100" max="400" step="1" value="100" />
+          <em id="cropZoomVal">100%</em>
+        </div>
+
+
+        <footer class="sheet__foot">
+          <p class="sheet__error" id="cropErr"></p>
+          <div class="sheet__actions">
+            <button type="button" class="btn btn--ghost" data-close>取消</button>
+            <button type="button" class="btn btn--ink" id="cropOk">使用</button>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <div class="sheet" id="confirmSheet" hidden>
+      <div class="sheet__scrim" data-close></div>
+      <div class="sheet__panel sheet__panel--confirm">
+        <h3 id="confirmTitle"></h3>
+        <p id="confirmMsg"></p>
+        <div class="set-actions">
+          <button type="button" class="btn btn--ghost" id="confirmNo">取消</button>
+          <button type="button" class="btn btn--danger" id="confirmYes">确定</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" hidden>
+      <span id="toastMsg"></span>
+      <button type="button" id="toastAction" hidden></button>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

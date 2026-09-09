@@ -1,0 +1,55 @@
+{
+  "name": "shizhi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "拾址 - 本地网址速查台 (Electron)",
+  "type": "module",
+  "main": "src/main/index.cjs",
+  "scripts": {
+    "test": "node --test test",
+    "dist": "electron-builder --win nsis portable",
+    "dist:installer": "electron-builder --win nsis",
+    "dist:portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.shizhi.app",
+    "productName": "shizhi",
+    "icon": "build/icon.ico",
+    "asar": false,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "extension/**/*",
+      "docs/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "拾址",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "language": "2052",
+      "artifactName": "拾址-安装版.${ext}"
+    },
+    "portable": {
+      "artifactName": "拾址-便携版.${ext}"
+    },
+    "electronVersion": "31.7.7",
+    "electronDist": "../node_modules/electron/dist"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.15.3"
+  }
+}

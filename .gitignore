@@ -1,0 +1,8 @@
+node_modules/
+dist/
+分发/
+
+*.exe
+*.log
+.DS_Store
+Thumbs.db
