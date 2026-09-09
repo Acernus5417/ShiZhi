@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "拾址 · SHIZHI",
+  "version": "1.0.0",
+  "description": "把当前页面或链接收进桌面上的「拾址」，右键即可。",
+  "icons": {
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["contextMenus", "notifications", "activeTab", "scripting"],
+  "host_permissions": ["http://127.0.0.1:17820/*"],
+  "background": {
+    "service_worker": "sw.js"
+  }
+}
